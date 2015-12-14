@@ -1,0 +1,20 @@
+elasticsearch:
+  image: elasticsearch:2.0
+  command: elasticsearch -Des.network.host=0.0.0.0
+
+logstash:
+  image: logstash:2.0
+  command: logstash -f /etc/logstash/conf.d/logstash.conf
+  ports:
+    - "12201:12201/udp"
+  volumes:
+    - "./logstash:/etc/logstash/conf.d"
+  links:
+    - elasticsearch
+
+kibana:
+  image: kibana:4.2
+  links:
+    - elasticsearch
+  ports:
+    - "5601:5601"
